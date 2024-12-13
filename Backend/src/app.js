@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 const app = express()
 
 app.use(cors({
-    origin: "https://smart-delivery-management-system-backend.onrender.com",
+    origin: "https://smart-delivery-management-system-frontend-5zys.onrender.com",
     credentials: true
 }))
 
