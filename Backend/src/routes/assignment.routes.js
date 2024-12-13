@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
     assignOrder, 
+    fetchAssignments,
     getAssignmentMetrics,
     failAssignment,
 } from "../controllers/assignment.controllers.js"
@@ -12,6 +13,8 @@ const router = Router();
 router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 router.route("/:orderId").post(assignOrder) //testing-done
+
+router.route("/").get(fetchAssignments) //testing-done
 
 router.route("/assignment-metrics").get(getAssignmentMetrics) //testing-done
 

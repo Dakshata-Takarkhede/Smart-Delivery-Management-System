@@ -9,6 +9,8 @@ import { Order } from "../models/order.models.js"
 const assignOrder = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
   const { partnerName } = req.body;
+  // console.log(partnerName);
+  
 
   // 1. Validate the existence of the order
   const order = await Order.findById(orderId);
@@ -18,6 +20,8 @@ const assignOrder = asyncHandler(async (req, res) => {
 
   // 2. Validate the existence of the partner. Find the partner by name (instead of partnerId)
   const partner = await DeliveryPartner.findOne({ name: partnerName });
+  // console.log(partner);
+  
   if (!partner) {
     throw new ApiError(404, "Delivery partner not found.");
   }
@@ -69,6 +73,26 @@ const assignOrder = asyncHandler(async (req, res) => {
   return res
   .status(201)
   .json(new ApiResponse(201, assignment, "Order assigned successfully."));
+});
+
+
+// Fetch all assignments
+const fetchAssignments = asyncHandler(async (req, res) => {
+  const assignments = await Assignment.find()
+    .populate("orderId", "customer area items totalAmount") // Populate order details (adjust fields as needed)
+    .populate("partnerId", "name email phone") // Populate partner details (adjust fields as needed)
+    .exec();
+
+  if (!assignments || assignments.length === 0) {
+    return res.status(404).json({
+      success: false,
+      message: "No assignments found",
+    });
+  }
+
+  return res
+  .status(200)
+  .json( new ApiResponse(200, assignments, "Assignment data retrieved successfully"));
 });
 
 
@@ -161,6 +185,7 @@ const failAssignment = asyncHandler(async (req, res) => {
 
 export { 
     assignOrder, 
+    fetchAssignments,
     getAssignmentMetrics,
     failAssignment,
 };
